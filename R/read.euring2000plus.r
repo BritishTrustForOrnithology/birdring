@@ -1,5 +1,6 @@
 # read EURING data format EURING 2000+ into R
 # Author: Fraenzi Korner-Nievergelt
+# Modified by: Samantha Franks
 #
 # Reference: du Feu et al. 2012: The EURING Exchange Code 2000+. www.euring.org
 #-------------------------------------------------------------------------------
@@ -9,22 +10,26 @@ read.euring2000plus <- function(filename){
 #-------------------------------------------------------------------------------
 options(encoding="latin1")
 
-rodat <- read.table(filename, colClasses = "character", sep="|")
-dat <- data.frame(scheme=rodat$V1, id.method=rodat$V2, ring=rodat$V3)
-dat$ring.verif <- rodat$V4
-dat$metal.ring.info <- rodat$V5
-dat$marks.info <- rodat$V6
-dat$spec.byringer <- rodat$V7
-dat$spec.byscheme <- rodat$V8
-dat$manipulated <- rodat$V9
-dat$moved <- rodat$V10
-dat$catching.method <- rodat$V11
-dat$catching.lures <- rodat$V12
-dat$sex.byringer <- rodat$V13
-dat$sex.byscheme <- rodat$V14
-dat$age.byringer <- rodat$V15
-dat$age.byscheme<-rodat$V16
-dat$status <- rodat$V17
+rodat <- fread(filename)
+dat <- data.table(
+  scheme=rodat$V1, 
+  id.method=rodat$V2, 
+  ring=rodat$V3, 
+  ring.verif=rodat$V4,
+  metal.ring.info=rodat$V5,
+  marks.info=rodat$V6,
+  spec.byringer=rodat$V7,
+  spec.byscheme=rodat$V8,
+  manipulated=rodat$V9,
+  moved=rodat$V10,
+  catching.method=rodat$V11,
+  catching.lures=rodat$V12,
+  sex.byringer=rodat$V13,
+  sex.byscheme=rodat$V14,
+  age.byringer=rodat$V15,
+  age.byscheme=rodat$V16,
+  status=rodat$V17,
+  broodsize=rodat$V18)
 
 suppressWarnings(dat$broodsize <- as.numeric(rodat$V18))
 if(sum(is.na(dat$broodsize)>0)) {
